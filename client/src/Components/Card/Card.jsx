@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import "./Card.css";
 
-const Card = ({ post }) => {
+const Card = ({ post, socket, user }) => {
   const [liked, setLiked] = useState(false);
 
-  const handleNotification = () => {
-    setLiked(!liked);
+  const handleNotification = (type) => {
+    if (type === 1) {
+      setLiked(!liked);
+    }
+    socket.emit("sendNotification", {
+      senderName: user,
+      receiverName: post.username,
+      type,
+    });
   };
 
   return (
@@ -28,11 +35,21 @@ const Card = ({ post }) => {
             src="/img/heart.svg"
             alt=""
             className="cardIcon"
-            onClick={handleNotification}
+            onClick={() => handleNotification(1)}
           />
         )}
-        <img src="/img/comment.svg" alt="" className="cardIcon" />
-        <img src="/img/share.svg" alt="" className="cardIcon" />
+        <img
+          src="/img/comment.svg"
+          alt=""
+          className="cardIcon"
+          onClick={() => handleNotification(2)}
+        />
+        <img
+          src="/img/share.svg"
+          alt=""
+          className="cardIcon"
+          onClick={() => handleNotification(3)}
+        />
         <img src="/img/info.svg" alt="" className="cardIcon infoIcon" />
       </div>
     </div>
